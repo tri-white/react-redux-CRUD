@@ -41,35 +41,38 @@ const UpdateEmployee = ({ onClose }) => {
     navigate('/employees');
   }
   return (
-    <div className="update-employee-form">
-      <h2>Update Employee</h2>
-      <form>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="department">Department:</label>
-          <input
-            type="text"
-            id="department"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-          />
-        </div>
-        <button type="button" className="btn btn-primary" onClick={handleUpdateEmployee}>
-          Update Employee
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={handleFormClose}>
-          Cancel
-        </button>
-      </form>
-    </div>
+    <div className="update-employee-form container mt-4">
+    <h2 className="mb-3">Оновити інформацію про працівника</h2>
+    <form>
+      <div className="mb-3">
+        <label htmlFor="name" className="form-label">Ім'я:</label>
+        <input
+          type="text"
+          id="name"
+          className="form-control"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="department" className="form-label">Департамент:</label>
+        <input
+          type="text"
+          id="department"
+          className="form-control"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+        />
+      </div>
+      <button type="button" className="btn btn-primary me-2" onClick={handleUpdateEmployee}>
+        Оновити інформацію
+      </button>
+      <button type="button" className="btn btn-secondary" onClick={handleFormClose}>
+        Відміна
+      </button>
+    </form>
+  </div>
+  
   );
 };
 

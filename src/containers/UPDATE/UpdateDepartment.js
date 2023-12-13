@@ -18,7 +18,7 @@ const UpdateDepartment = ({ onClose }) => {
         const { name } = response.data;
         setName(name);
       } catch (error) {
-        console.error('Error fetching department details:', error);
+        console.error('Помилка при отриманні деталей департаменту:', error);
       }
     };
 
@@ -36,7 +36,7 @@ const UpdateDepartment = ({ onClose }) => {
 
       navigate('/departments');
     } catch (error) {
-      console.error('Error updating department:', error);
+      console.error('Помилка при оновленні департаменту:', error);
     }
   };
 
@@ -45,23 +45,24 @@ const UpdateDepartment = ({ onClose }) => {
   };
 
   return (
-    <div className="update-department-form">
-      <h2>Update Department</h2>
+    <div className="update-department-form container mt-4">
+      <h2>Оновити інформацію про департамент</h2>
       <form>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Назва:</label>
           <input
             type="text"
             id="name"
+            className="form-control"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <button type="button" className="btn btn-primary" onClick={handleUpdateDepartment}>
-          Update Department
+        <button type="button" className="btn btn-primary me-2" onClick={handleUpdateDepartment}>
+          Оновити департамент
         </button>
         <button type="button" className="btn btn-secondary" onClick={handleFormClose}>
-          Cancel
+          Відміна
         </button>
       </form>
     </div>

@@ -1,4 +1,3 @@
-// UpdateExpenseTypeForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -9,7 +8,7 @@ const UpdateExpenseType = ({ onClose }) => {
   const { id } = useParams();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [limit, setLimit] = useState('');
+  const [limit, setLimit] = useState(0); // Assuming limit should be a number
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,7 +21,7 @@ const UpdateExpenseType = ({ onClose }) => {
         setDescription(description);
         setLimit(limit);
       } catch (error) {
-        console.error('Error fetching expense type details:', error);
+        console.error('Помилка при отриманні деталей типу витрат:', error);
       }
     };
 
@@ -42,7 +41,7 @@ const UpdateExpenseType = ({ onClose }) => {
 
       navigate('/expense-types');
     } catch (error) {
-      console.error('Error updating expense type:', error);
+      console.error('Помилка при оновленні типу витрат:', error);
     }
   };
 
@@ -51,41 +50,44 @@ const UpdateExpenseType = ({ onClose }) => {
   };
 
   return (
-    <div className="update-expense-type-form">
-      <h2>Update Expense Type</h2>
+    <div className="update-expense-type-form container mt-4">
+      <h2>Оновити тип витрат</h2>
       <form>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Назва:</label>
           <input
             type="text"
             id="name"
+            className="form-control"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">Опис:</label>
           <input
             type="text"
             id="description"
+            className="form-control"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="limit">Limit:</label>
+        <div className="mb-3">
+          <label htmlFor="limit" className="form-label">Ліміт:</label>
           <input
-            type="text"
+            type="number"
             id="limit"
+            className="form-control"
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
           />
         </div>
-        <button type="button" className="btn btn-primary" onClick={handleUpdateExpenseType}>
-          Update Expense Type
+        <button type="button" className="btn btn-primary me-2" onClick={handleUpdateExpenseType}>
+          Оновити тип витрат
         </button>
         <button type="button" className="btn btn-secondary" onClick={handleFormClose}>
-          Cancel
+          Скасувати
         </button>
       </form>
     </div>

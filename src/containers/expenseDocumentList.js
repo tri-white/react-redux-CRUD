@@ -1,4 +1,3 @@
-// components/ExpenseDocumentList.js
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -21,7 +20,7 @@ const ExpenseDocumentList = () => {
         const response = await axios.get('http://localhost:3001/api/expense-documents/');
         dispatch(setExpenseDocuments(response.data));
       } catch (error) {
-        console.error('Error fetching expense documents:', error);
+        console.error('Помилка при отриманні документів витрат:', error);
       }
     };
 
@@ -42,7 +41,7 @@ const ExpenseDocumentList = () => {
       navigate('/expense-documents');
 
     } catch (error) {
-      console.error('Error adding expense document:', error);
+      console.error('Помилка при додаванні документа витрат:', error);
     }
   };
 
@@ -52,7 +51,7 @@ const ExpenseDocumentList = () => {
       dispatch(deleteExpenseDocument(id));
 
     } catch (error) {
-      console.error('Error deleting expense document:', error);
+      console.error('Помилка при видаленні документа витрат:', error);
     }
   };
 
@@ -71,81 +70,86 @@ const ExpenseDocumentList = () => {
         <td>{date}</td>
         <td>{amount}</td>
         <td>
-          <button className="btn btn-primary" onClick={() => handleUpdateClick(_id)}>Edit</button>
-          <button className="btn btn-danger" onClick={() => handleDeleteExpenseDocument(_id)}>Delete</button>
+          <button className="btn btn-primary me-2" onClick={() => handleUpdateClick(_id)}>Редагувати</button>
+          <button className="btn btn-danger" onClick={() => handleDeleteExpenseDocument(_id)}>Видалити</button>
         </td>
       </tr>
     );
   });
 
   return (
-    <div>
-      <h2>Expense Documents</h2>
+    <div className="container mt-4">
+      <h2>Документи витрат</h2>
       <div className="expense-document-list">
         <div>
-          <h2>Add Expense Document</h2>
+          <h2>Додати документ витрат</h2>
           <form>
-            <div className="form-group">
-              <label htmlFor="department">Department:</label>
+            <div className="mb-3">
+              <label htmlFor="department" className="form-label">Департамент:</label>
               <input
                 type="text"
                 id="department"
+                className="form-control"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="employee">Employee:</label>
+            <div className="mb-3">
+              <label htmlFor="employee" className="form-label">Працівник:</label>
               <input
                 type="text"
                 id="employee"
+                className="form-control"
                 value={employee}
                 onChange={(e) => setEmployee(e.target.value)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="expenseType">Expense Type:</label>
+            <div className="mb-3">
+              <label htmlFor="expenseType" className="form-label">Тип витрат:</label>
               <input
                 type="text"
                 id="expenseType"
+                className="form-control"
                 value={expenseType}
                 onChange={(e) => setExpenseType(e.target.value)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="date">Date:</label>
+            <div className="mb-3">
+              <label htmlFor="date" className="form-label">Дата:</label>
               <input
                 type="text"
                 id="date"
+                className="form-control"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="amount">Amount:</label>
+            <div className="mb-3">
+              <label htmlFor="amount" className="form-label">Сума:</label>
               <input
                 type="text"
                 id="amount"
+                className="form-control"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
             </div>
             <button type="button" className="btn btn-primary" onClick={handleAddExpenseDocument}>
-              Add Expense Document
+              Додати документ витрат
             </button>
           </form>
         </div>
-        <h3>Expense Documents List</h3>
+        <h3>Список документів витрат</h3>
         <table className="table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Department</th>
-              <th>Employee</th>
-              <th>Expense Type</th>
-              <th>Date</th>
-              <th>Amount</th>
-              <th>Action</th>
+              <th>Департамент</th>
+              <th>Працівник</th>
+              <th>Тип витрат</th>
+              <th>Дата</th>
+              <th>Сума</th>
+              <th>Дії</th>
             </tr>
           </thead>
           <tbody>

@@ -25,7 +25,7 @@ const UpdateExpenseDocument = ({ onClose }) => {
         setDate(date);
         setAmount(amount);
       } catch (error) {
-        console.error('Error fetching expense document details:', error);
+        console.error('Помилка при отриманні деталей документа витрат:', error);
       }
     };
 
@@ -47,7 +47,7 @@ const UpdateExpenseDocument = ({ onClose }) => {
 
       navigate('/expense-documents');
     } catch (error) {
-      console.error('Error updating expense document:', error);
+      console.error('Помилка при оновленні документа витрат:', error);
     }
   };
 
@@ -56,59 +56,64 @@ const UpdateExpenseDocument = ({ onClose }) => {
   };
 
   return (
-    <div className="update-expense-document-form">
-      <h2>Update Expense Document</h2>
+    <div className="container mt-4">
+      <h2>Оновити документ витрат</h2>
       <form>
-        <div className="form-group">
-          <label htmlFor="department">Department:</label>
+        <div className="mb-3">
+          <label htmlFor="department" className="form-label">Департамент:</label>
           <input
             type="text"
             id="department"
+            className="form-control"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="employee">Employee:</label>
+        <div className="mb-3">
+          <label htmlFor="employee" className="form-label">Працівник:</label>
           <input
             type="text"
             id="employee"
+            className="form-control"
             value={employee}
             onChange={(e) => setEmployee(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="expenseType">Expense Type:</label>
+        <div className="mb-3">
+          <label htmlFor="expenseType" className="form-label">Тип витрат:</label>
           <input
             type="text"
             id="expenseType"
+            className="form-control"
             value={expenseType}
             onChange={(e) => setExpenseType(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="date">Date:</label>
+        <div className="mb-3">
+          <label htmlFor="date" className="form-label">Дата:</label>
           <input
             type="text"
             id="date"
+            className="form-control"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="amount">Amount:</label>
+        <div className="mb-3">
+          <label htmlFor="amount" className="form-label">Сума:</label>
           <input
             type="text"
             id="amount"
+            className="form-control"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
         <button type="button" className="btn btn-primary" onClick={handleUpdateExpenseDocument}>
-          Update Expense Document
+          Оновити документ витрат
         </button>
-        <button type="button" className="btn btn-secondary" onClick={handleFormClose}>
-          Cancel
+        <button type="button" className="btn btn-secondary ms-2" onClick={handleFormClose}>
+          Скасувати
         </button>
       </form>
     </div>
