@@ -8,6 +8,10 @@ const EmployeeList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [departments, setDepartments] = useState([]);
+  const [name, setName] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+
   const fetchEmployees = async () => {
     try {
       const response = await axios.get("http://localhost:3001/api/employees/");
@@ -17,8 +21,18 @@ const EmployeeList = () => {
     }
   };
 
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/api/departments/");
+      setDepartments(response.data);
+    } catch (err) {
+      console.log("Помилка", err);
+    }
+  };
+
   useEffect(() => {
     fetchEmployees();
+    fetchDepartments();
   }, []);
 
   const handleDelete = async (id) => {
@@ -34,90 +48,97 @@ const EmployeeList = () => {
     navigate(`/employees/update/${id}`);
   };
 
-  const employees2 = useSelector((state) => state.allEmployees.employees);
-  const renderList = employees2.map((employee) => {
-    const { _id, name, department } = employee;
-    return (
-      <tr key={_id} className="table-row">
-      <td>{_id}</td>
-      <td>{name}</td>
-      <td>{department}</td>
-      <td>
-        <button className="btn btn-primary btn-sm me-2" onClick={() => handleUpdateClick(_id)}>
-          Редагувати
-        </button>
-        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(_id)}>
-          Видалити
-        </button>
-      </td>
-    </tr>
-    
-    );
-  });
-
-  const [name, setName] = useState('');
-  const [department, setDepartment] = useState('');
-
   const handleAddEmployee = async () => {
     try {
       const response = await axios.post('http://localhost:3001/api/employees/', {
         name,
-        department,
+        department: selectedDepartment,
       });
       dispatch(addEmployee(response.data));
 
       setName('');
-      setDepartment('');
+      setSelectedDepartment('');
       navigate('/employees');
     } catch (error) {
       console.error('Помилка при додаванні працівника:', error);
     }
   };
 
+  const renderList = useSelector((state) => state.allEmployees.employees).map((employee) => {
+    const { _id, name, department } = employee;
+
+    const selectedDepartment = departments.find((dept) => dept._id === department);
+
+    return (
+      <tr key={_id} className="table-row">
+        <td>{_id}</td>
+        <td>{name}</td>
+        <td>{selectedDepartment ? selectedDepartment.name : ''}</td>
+        <td>
+          <button className="btn btn-primary btn-sm me-2" onClick={() => handleUpdateClick(_id)}>
+            Редагувати
+          </button>
+          <button className="btn btn-danger btn-sm" onClick={() => handleDelete(_id)}>
+            Видалити
+          </button>
+        </td>
+      </tr>
+    );
+  });
+
   return (
     <div className="container mt-4">
-    <h2 className="mb-3">Додати працівника</h2>
-    <form className="mb-4">
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">Ім'я:</label>
-        <input
-          type="text"
-          id="name"
-          className="form-control"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="department" className="form-label">Департамент:</label>
-        <input
-          type="text"
-          id="department"
-          className="form-control"
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-        />
-      </div>
-      <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
-        Додати працівника
-      </button>
-    </form>
-  
-    <h2 className="mb-3">Список працівників</h2>
-  
-    <table className="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Ім'я</th>
-          <th>Департамент</th>
-          <th>Дії</th>
-        </tr>
-      </thead>
-      <tbody>{renderList}</tbody>
-    </table>
-  </div>
-  
+      <h2 className="mb-3">Додати працівника</h2>
+      <form className="mb-4">
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Ім'я:
+          </label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="department" className="form-label">
+            Департамент:
+          </label>
+          <select
+            id="department"
+            className="form-select"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+          >
+            <option value="">Виберіть департамент</option>
+            {departments.map((department) => (
+              <option key={department._id} value={department._id}>
+               {department.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
+          Додати працівника
+        </button>
+      </form>
+
+      <h2 className="mb-3">Список працівників</h2>
+
+      <table className="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ім'я</th>
+            <th>Департамент</th>
+            <th>Дії</th>
+          </tr>
+        </thead>
+        <tbody>{renderList}</tbody>
+      </table>
+    </div>
   );
 };
 
