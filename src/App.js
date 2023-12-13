@@ -1,18 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
-import Home from './Home';
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Create from './Create';
-import Update from './Update';
+import {BrowserRouter, Routes, Route, Router} from 'react-router-dom'
+import Header from './containers/Header'
+import EmployeeList from './containers/EmployeeList';
+import AddEmployee from './containers/ADD/AddEmployee';
+import UpdateEmployee from './containers/UPDATE/UpdateEmployee';
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/create" element={<Create />}></Route>
-        <Route path="/edit/:name" element={<Update />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <div className='App'>
+      <Header />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/employees" element={<EmployeeList />} />
+          <Route path="/employees/add" element={<AddEmployee />} />
+          <Route path="/employees/update/:id" element={<UpdateEmployee />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
