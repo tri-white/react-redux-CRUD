@@ -74,15 +74,20 @@ const UpdateExpenseType = ({ onClose }) => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="limit" className="form-label">Ліміт:</label>
-          <input
-            type="number"
-            id="limit"
-            className="form-control"
-            value={limit}
-            onChange={(e) => setLimit(e.target.value)}
-          />
-        </div>
+  <label htmlFor="limit" className="form-label">Ліміт:</label>
+  <input
+    type="text"
+    id="limit"
+    className="form-control"
+    value={limit}
+    onChange={(e) => setLimit(e.target.value.replace(/\D/, ''))}
+    inputMode="numeric"
+    pattern="[0-9]*"
+  />
+</div>
+
+
+
         <button type="button" className="btn btn-primary me-2" onClick={handleUpdateExpenseType}>
           Оновити тип витрат
         </button>

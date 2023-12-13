@@ -115,15 +115,18 @@ const ExpenseDocumentList = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="date" className="form-label">Дата:</label>
-              <input
-                type="text"
-                id="date"
-                className="form-control"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
+  <label htmlFor="date" className="form-label">Дата:</label>
+  <input
+    type="date"
+    id="date"
+    className="form-control"
+    value={date}
+    onChange={(e) => setDate(e.target.value)}
+    pattern="\d{2}/\d{2}/\d{4}"
+    placeholder="MM/dd/YYYY"
+  />
+</div>
+
             <div className="mb-3">
               <label htmlFor="amount" className="form-label">Сума:</label>
               <input
@@ -131,7 +134,9 @@ const ExpenseDocumentList = () => {
                 id="amount"
                 className="form-control"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => setAmount(e.target.value.replace(/\D/, ''))}
+                inputMode="numeric"
+                pattern="[0-9]*"
               />
             </div>
             <button type="button" className="btn btn-primary" onClick={handleAddExpenseDocument}>
