@@ -6,9 +6,12 @@ import { setExpenseDocuments } from '../../redux/actions/expenseDocumentActions'
 
 const UpdateExpenseDocument = ({ onClose }) => {
   const { id } = useParams();
-  const [department, setDepartment] = useState('');
-  const [employee, setEmployee] = useState('');
-  const [expenseType, setExpenseType] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [expenseTypes, setExpenseTypes] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedExpenseType, setSelectedExpenseType] = useState('');
   const [date, setDate] = useState('');
   const [amount, setAmount] = useState('');
   const dispatch = useDispatch();
@@ -19,25 +22,55 @@ const UpdateExpenseDocument = ({ onClose }) => {
       try {
         const response = await axios.get(`http://localhost:3001/api/expense-documents/${id}`);
         const { department, employee, expenseType, date, amount } = response.data;
-        setDepartment(department);
-        setEmployee(employee);
-        setExpenseType(expenseType);
+        setSelectedDepartment(department);
+        setSelectedEmployee(employee);
+        setSelectedExpenseType(expenseType);
         setDate(date);
         setAmount(amount);
       } catch (error) {
-        console.error('Помилка при отриманні деталей документа витрат:', error);
+        console.error('Error fetching expense document details:', error);
+      }
+    };
+
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/departments/');
+        setDepartments(response.data);
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/employees/');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    const fetchExpenseTypes = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/expense-types/');
+        setExpenseTypes(response.data);
+      } catch (error) {
+        console.error('Error fetching expense types:', error);
       }
     };
 
     fetchExpenseDocumentDetails();
+    fetchDepartments();
+    fetchEmployees();
+    fetchExpenseTypes();
   }, [id]);
 
   const handleUpdateExpenseDocument = async () => {
     try {
       await axios.put(`http://localhost:3001/api/expense-documents/${id}`, {
-        department,
-        employee,
-        expenseType,
+        department: selectedDepartment,
+        employee: selectedEmployee,
+        expenseType: selectedExpenseType,
         date,
         amount,
       });
@@ -47,7 +80,7 @@ const UpdateExpenseDocument = ({ onClose }) => {
 
       navigate('/expense-documents');
     } catch (error) {
-      console.error('Помилка при оновленні документа витрат:', error);
+      console.error('Error updating expense document:', error);
     }
   };
 
@@ -61,33 +94,51 @@ const UpdateExpenseDocument = ({ onClose }) => {
       <form>
         <div className="mb-3">
           <label htmlFor="department" className="form-label">Департамент:</label>
-          <input
-            type="text"
+          <select
             id="department"
-            className="form-control"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-          />
+            className="form-select"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+          >
+            <option value="">Виберіть департамент</option>
+            {departments.map((department) => (
+              <option key={department._id} value={department._id}>
+                {department.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="employee" className="form-label">Працівник:</label>
-          <input
-            type="text"
+          <select
             id="employee"
-            className="form-control"
-            value={employee}
-            onChange={(e) => setEmployee(e.target.value)}
-          />
+            className="form-select"
+            value={selectedEmployee}
+            onChange={(e) => setSelectedEmployee(e.target.value)}
+          >
+            <option value="">Виберіть працівника</option>
+            {employees.map((employee) => (
+              <option key={employee._id} value={employee._id}>
+                {employee.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="expenseType" className="form-label">Тип витрат:</label>
-          <input
-            type="text"
+          <select
             id="expenseType"
-            className="form-control"
-            value={expenseType}
-            onChange={(e) => setExpenseType(e.target.value)}
-          />
+            className="form-select"
+            value={selectedExpenseType}
+            onChange={(e) => setSelectedExpenseType(e.target.value)}
+          >
+            <option value="">Виберіть тип витрат</option>
+            {expenseTypes.map((expenseType) => (
+              <option key={expenseType._id} value={expenseType._id}>
+                {expenseType.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="date" className="form-label">Дата:</label>

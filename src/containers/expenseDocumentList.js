@@ -7,9 +7,12 @@ import { useNavigate } from 'react-router-dom';
 const ExpenseDocumentList = () => {
   const dispatch = useDispatch();
   const expenseDocuments = useSelector((state) => state.allExpenseDocuments.expenseDocuments);
-  const [department, setDepartment] = useState('');
-  const [employee, setEmployee] = useState('');
-  const [expenseType, setExpenseType] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [expenseTypes, setExpenseTypes] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedExpenseType, setSelectedExpenseType] = useState('');
   const [date, setDate] = useState('');
   const [amount, setAmount] = useState('');
   const navigate = useNavigate();
@@ -20,28 +23,57 @@ const ExpenseDocumentList = () => {
         const response = await axios.get('http://localhost:3001/api/expense-documents/');
         dispatch(setExpenseDocuments(response.data));
       } catch (error) {
-        console.error('Помилка при отриманні документів витрат:', error);
+        console.error('Error fetching expense documents:', error);
+      }
+    };
+
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/departments/');
+        setDepartments(response.data);
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/employees/');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    const fetchExpenseTypes = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/expense-types/');
+        setExpenseTypes(response.data);
+      } catch (error) {
+        console.error('Error fetching expense types:', error);
       }
     };
 
     fetchExpenseDocuments();
+    fetchDepartments();
+    fetchEmployees();
+    fetchExpenseTypes();
   }, [dispatch]);
 
   const handleAddExpenseDocument = async () => {
     try {
       const response = await axios.post('http://localhost:3001/api/expense-documents/', {
-        department,
-        employee,
-        expenseType,
+        department: selectedDepartment,
+        employee: selectedEmployee,
+        expenseType: selectedExpenseType,
         date,
         amount,
       });
 
       dispatch(addExpenseDocument(response.data));
       navigate('/expense-documents');
-
     } catch (error) {
-      console.error('Помилка при додаванні документа витрат:', error);
+      console.error('Error adding expense document:', error);
     }
   };
 
@@ -61,12 +93,16 @@ const ExpenseDocumentList = () => {
 
   const renderList = expenseDocuments.map((expenseDocument) => {
     const { _id, department, employee, expenseType, date, amount } = expenseDocument;
+    const departmentName = departments.find((dept) => dept._id === department)?.name || 'N/A';
+    const employeeName = employees.find((emp) => emp._id === employee)?.name || 'N/A';
+    const expenseTypeName = expenseTypes.find((type) => type._id === expenseType)?.name || 'N/A';
+
     return (
       <tr key={_id}>
         <td>{_id}</td>
-        <td>{department}</td>
-        <td>{employee}</td>
-        <td>{expenseType}</td>
+        <td>{departmentName}</td>
+        <td>{employeeName}</td>
+        <td>{expenseTypeName}</td>
         <td>{date}</td>
         <td>{amount}</td>
         <td>
@@ -86,33 +122,51 @@ const ExpenseDocumentList = () => {
           <form>
             <div className="mb-3">
               <label htmlFor="department" className="form-label">Департамент:</label>
-              <input
-                type="text"
+              <select
                 id="department"
-                className="form-control"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-              />
+                className="form-select"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
+                <option value="">Виберіть департамент</option>
+                {departments.map((department) => (
+                  <option key={department._id} value={department._id}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-3">
               <label htmlFor="employee" className="form-label">Працівник:</label>
-              <input
-                type="text"
+              <select
                 id="employee"
-                className="form-control"
-                value={employee}
-                onChange={(e) => setEmployee(e.target.value)}
-              />
+                className="form-select"
+                value={selectedEmployee}
+                onChange={(e) => setSelectedEmployee(e.target.value)}
+              >
+                <option value="">Виберіть працівника</option>
+                {employees.map((employee) => (
+                  <option key={employee._id} value={employee._id}>
+                    {employee.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-3">
               <label htmlFor="expenseType" className="form-label">Тип витрат:</label>
-              <input
-                type="text"
+              <select
                 id="expenseType"
-                className="form-control"
-                value={expenseType}
-                onChange={(e) => setExpenseType(e.target.value)}
-              />
+                className="form-select"
+                value={selectedExpenseType}
+                onChange={(e) => setSelectedExpenseType(e.target.value)}
+              >
+                <option value="">Виберіть тип витрат</option>
+                {expenseTypes.map((expenseType) => (
+                  <option key={expenseType._id} value={expenseType._id}>
+                    {expenseType.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-3">
   <label htmlFor="date" className="form-label">Дата:</label>
