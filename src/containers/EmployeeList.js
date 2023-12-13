@@ -20,9 +20,6 @@ const EmployeeList = () =>{
         fetchEmployees();
     }, []);
 
-    const handleAddEmployeeClick = () => {
-        navigate('/employees/add');
-      };
     const handleDelete = async (id) => {
         await axios.delete(`http://localhost:3001/api/employees/${id}`);
         dispatch(deleteEmployee(id));
