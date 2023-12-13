@@ -10,6 +10,8 @@ export const employeeReducer = (state = initialState,action)=>{
     switch(action.type){
         case ActionTypes.SET_EMPLOYEES:
             return {...state, employees:action.payload};
+        case ActionTypes.ADD_EMPLOYEE:
+                return { ...state, employees: [...state.employees, action.payload] };
         case ActionTypes.DELETE_EMPLOYEE:
                 return {
                     ...state,

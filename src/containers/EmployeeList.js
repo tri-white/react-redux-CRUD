@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import EmployeeComponent from './EmployeeComponent'
 import axios from 'axios';
-import { deleteEmployee, setEmployees } from '../redux/actions/employeeActions';
+import { deleteEmployee, setEmployees, addEmployee } from '../redux/actions/employeeActions';
 import { useNavigate } from 'react-router-dom';
-import AddEmployee from './ADD/AddEmployee';
-import UpdateEmployee from './UPDATE/UpdateEmployee';
 const EmployeeList = () =>{
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,9 +29,6 @@ const EmployeeList = () =>{
 
     };
 
-      
-    const [showUpdateForm, setShowUpdateForm] = useState(false);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
 
   
@@ -43,10 +37,10 @@ const EmployeeList = () =>{
   };
   
     const employees2 = useSelector((state)=> state.allEmployees.employees);
-const renderList = employees2.map((employee)=>{
+    const renderList = employees2.map((employee)=>{
     const {_id, name, department} = employee;
     return (
-<tr>
+    <tr>
     <td>{_id}</td>
     <td>{name}</td>
     <td>{department}</td>
@@ -58,11 +52,55 @@ const renderList = employees2.map((employee)=>{
         
     );
 })
+
+
+  const [name, setName] = useState('');
+  const [department, setDepartment] = useState('');
+  const handleAddEmployee = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/employees/', {
+        name,
+        department,
+      });
+      dispatch(addEmployee(response.data));
+
+      setName('');
+      setDepartment('');
+      navigate('/employees');
+    } catch (error) {
+      console.error('Error adding employee:', error);
+    }
+  };
+
     return(
         <div className=''>
-            <button className="btn btn-success" onClick={handleAddEmployeeClick}>
-        Add Employee
-      </button>
+
+      <div className="container">
+      <h2>Add Employee</h2>
+      <form>
+        <div className="form-group">
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="department">Department:</label>
+          <input
+            type="text"
+            id="department"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+          />
+        </div>
+        <button type="button" className="btn btn-primary" onClick={handleAddEmployee}>
+          Add Employee
+        </button>
+      </form>
+    </div>
             <table className="table">
         <thead>
             <tr>
@@ -75,12 +113,6 @@ const renderList = employees2.map((employee)=>{
         </thead>
         <tbody>
                 {renderList}
-                {showUpdateForm && (
-        <UpdateEmployeeForm
-          employeeId={selectedEmployeeId}
-          onClose={() => setShowUpdateForm(false)}
-        />
-      )}
         </tbody>
     </table>
             

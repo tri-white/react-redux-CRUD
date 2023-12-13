@@ -14,6 +14,11 @@ export const selectedEmployees = (employee) => {
     }
 }
 
+export const addEmployee = (employee) => ({
+    type: ActionTypes.ADD_EMPLOYEE,
+    payload: employee,
+  });
+
 export const deleteEmployee = (id) => ({
     type: ActionTypes.DELETE_EMPLOYEE,
     payload: id,
